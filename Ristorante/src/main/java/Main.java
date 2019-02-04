@@ -12,9 +12,10 @@ import java.util.Date;
 
 public class Main {
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws ElementoGiaPresenteNellaListaException {
 
         DebugPrinter dp  = new DebugPrinter();
+        ICashDesk cashDesk = new CashDeskOne();
 
         IWaiter waiter1 = new BaseWaiter.BuilderWaiter("Fabio")
                 .whitID("01")
@@ -28,28 +29,27 @@ public class Main {
         IOrder order2 = new BaseOrder( "0002");
 
         ItemOrder pasta1 = new Pasta();
+        pasta1 = new PastaDecorator( pasta1, PastaDecoratorEnum.tomatoSauce);
         order1.addItem( pasta1, 1);
 
-        pasta1 = new PastaDecorator( pasta1, PastaDecoratorEnum.tomatoSauce);
 
         ItemOrder pasta2 = new Pasta();
-        order1.addItem((ItemOrder) pasta2, 1);
-
         pasta2 = new PastaDecorator( pasta2, PastaDecoratorEnum.carbonara);
 
+        order1.addItem((ItemOrder) pasta2, 1);
+
         ItemOrder pasta3 = new Pasta();
+        pasta3 = new PastaDecorator( pasta3, PastaDecoratorEnum.cozze);
         order2.addItem((ItemOrder) pasta3, 1);
 
-        pasta3 = new PastaDecorator( pasta3, PastaDecoratorEnum.cozze);
-
         ItemOrder coffe = new CoffeeItemOrder();
-        order1.addItem((ItemOrder) coffe, 2);
         coffe = new CoffeeDecorator( coffe, CoffeeDecoratorEnum.milk);
         coffe = new CoffeeDecorator(coffe, CoffeeDecoratorEnum.corretto);
+        order1.addItem((ItemOrder) coffe, 2);
 
         ItemOrder coffe2 = new CoffeeItemOrder();
-        order2.addItem((ItemOrder) coffe2, 1);
         coffe2 = new CoffeeDecorator( coffe2, CoffeeDecoratorEnum.cacao);
+        order2.addItem((ItemOrder) coffe2, 1);
 
         waiter1.setOrder( order1 );
         waiter2.setOrder( order2 );
@@ -62,9 +62,16 @@ public class Main {
         IClient client2 = new BaseClient("Lara", 10);
 
         IReservation reservation = new BaseReservetion( table1, client1, new Date(2019, 03, 02, 19, 20));
-        IReservation reservation1 = new BaseReservetion( table2, client2, new Date(2019, 03, 05, 17, 45));
+        IReservation reservation1 = new BaseReservetion( table2, client2, new Date(2019, 03, 02, 17, 45));
+
+
+        IClient diPippa = new BaseClient("Pietro Di Pippa", 20);
+        IReservation reservation2 = new BaseReservetion( table1, diPippa, new Date(2019, 02, 02, 19, 30));
 
         ReservationManager reservationManager = new ReservationManager();
+
+        reservationManager.addReservation( reservation1 );
+        reservationManager.addReservation( reservation2 );
         reservationManager.addReservation( reservation );
         reservationManager.addReservation( reservation1 );
 
@@ -74,7 +81,10 @@ public class Main {
 
         System.out.println( dp.prettyPrint( reservationManager ));
 
-        System.out.println( reservationManager.searchByClient( client1 ).toString() );
+
+        System.out.println( dp.prettyPrintReservatio( reservationManager.searchByClient( client1 ) ));
+        System.out.println( dp.prettyPrintReservatio( reservationManager.searchByDate( new Date( 2019, 03, 02, 17, 45) ) ));
+        System.out.println( cashDesk.pay( diPippa, order1));
 
 
     }

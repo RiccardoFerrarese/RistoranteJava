@@ -73,8 +73,8 @@ public class DebugPrinter {
             return sb.append("\nNon ci sono ordini presenti").toString();
         }
     }
-    /*
-    public String prettyPrint( List<IReservation> target ){
+
+    public String prettyPrintReservatio( List<IReservation> target ){
         StringBuilder sb = new StringBuilder();
         if( target != null){
             sb.append("\nLista Prenotazioni: ");
@@ -91,5 +91,5 @@ public class DebugPrinter {
         }
 
     }
-    */
+
 }
